@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ClienteDTO>
+@using Application.DTO
+
+@section Scripts{
+    <script src="~/js/PesquisarCliente.js"></script>
+}
+
+<div class="container">
+    <div class="row">
+        <p class="h1">Clientes</p>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <label class="col-form-label-sm">Tipo Pessoa:</label>
+            <select class="custom-select" id="tipoPessoaFiltro">
+                <option value="">Todos</option>
+                <option value="@(TipoPessoaDTO.Fisica)">Física</option>
+                <option value="@(TipoPessoaDTO.Juridica)">Jurídica</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="btn float-md-right" role="group">
+            <button class="btn btn-primary" onclick="Pesquisar()">
+                <i icon="bi bi-search"></i>
+                Pesquisar
+            </button>
+            <button class="btn btn-primary pull-right" type="submit" onclick="location.href='@Url.Action("Cadastrar", "Cliente")'">
+                <i icon="bi bi-search"></i>
+                Cadastrar Cliente
+            </button>
+        </div>
+
+    </div>
+    <div id="divPesquisaClientes" class="row">
+        <partial name="Listar.cshtml" model="Model" />
+    </div>
+</div>

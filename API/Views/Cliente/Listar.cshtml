@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ClienteDTO>
+@using Application.DTO
+
+<table class="table table-active table-bordered table-hover table-responsive-lg">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>CPF/CNPJ</th>
+            <th>Nome</th>
+            <th>Classificação</th>
+            <th>Contatos</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cliente in Model)
+        {
+            <tr>
+                <td asp-for="@(cliente.ID)">
+                    @(cliente.ID)
+                </td>
+                @if (cliente.TipoPessoaDTO == TipoPessoaDTO.Fisica)
+                {
+                    <td asp-for="@(cliente.PessoaDTO.CPF)">
+                        @(cliente.PessoaDTO.CPF)
+                    </td>
+                    <td asp-for="@(cliente.PessoaDTO.NomeCompleto)">
+                        @(cliente.PessoaDTO.NomeCompleto)
+                    </td>
+                }
+                else
+                {
+                    <td asp-for="@(cliente.PessoaDTO.CNPJ)">
+                        @(cliente.PessoaDTO.CNPJ)
+                    </td>
+                    <td asp-for="@(cliente.PessoaDTO.RazaoSocial)">
+                        @(cliente.PessoaDTO.RazaoSocial)
+                    </td>
+                }
+
+                <td asp-for="@(cliente.ClassificacaoDTO.ToString())">
+                    @(cliente.ClassificacaoDTO.ToString())
+                </td>
+                <td>
+                    @string.Join(" || ", cliente.Contatos.Select(t => t.Telefone))
+                </td>
+                <td>
+                    <button class="btn btn-primary" action="#" onclick="location.href='@Url.Action("Cadastrar", "Cliente", new { ID = cliente.ID })'">
+                        <i icon="bi bi-pencil"></i>
+                        Alterar
+                    </button>
+                    <button class="btn btn-primary" action="#" onclick="Remover('@cliente.ID')">
+                        <i icon="bi bi-trash"></i>
+                        Excluir
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,137 @@
+﻿@model ClienteDTO
+@using Application.DTO
+
+@section Scripts{
+    <script src="~/js/jquery.mask.js"></script>
+    <script src="~/js/jquery.mask.min.js"></script>
+    <script src="~/js/CadastroCliente.js"></script>
+
+}
+
+<form asp-action="CadastrarEditar" asp-controller="Cliente" method="post">
+    <input type="hidden" asp-for="ID" />
+    <input type="hidden" asp-for="PessoaDTO.ID" />
+    <div class="container overflow-auto">
+        <div class="row">
+            <p class="h1">Cadastrar Cliente</p>
+        </div>
+        @if (ViewData["Error"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewData["Error"]
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="col-form-label-sm">Tipo Pessoa:</label>
+                <select class="custom-select" id="tipoPessoa" asp-for="TipoPessoaDTO">
+                    <option value="@(TipoPessoaDTO.Fisica)">Física</option>
+                    <option value="@(TipoPessoaDTO.Juridica)">Jurídica</option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <label class="col-form-label-sm">E-mail:</label>
+                <input type="email" asp-for="Email" class="form-control"
+                       aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <span asp-validation-for="Email" class="border-danger text-danger"></span>
+            </div>
+            <div class="col-sm">
+                <label class="col-form-label-sm">CEP:</label>
+                <input asp-for="CEP" class="form-control"
+                       aria-label="CEP" aria-describedby="inputGroup-sizing-default">
+            </div>
+        </div>
+        <div class="row collapse" id="divCriarPessoaFisica">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <label class="col-form-label-sm">CPF:</label>
+                        <input asp-for="PessoaDTO.CPF" class="form-control"
+                               aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                    <div class="col-sm">
+                        <label class="col-form-label-sm">Nome Completo:</label>
+                        <input asp-for="PessoaDTO.NomeCompleto" class="form-control"
+                               aria-label="NomeCompleto" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row collapse" id="divCriarPessoaJuridica">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <label class="col-form-label-sm">CNPJ:</label>
+                        <input asp-for="PessoaDTO.CNPJ" class="form-control"
+                               aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                    <div class="col-sm">
+                        <label class="col-form-label-sm">Razão Social:</label>
+                        <input asp-for="PessoaDTO.RazaoSocial" class="form-control"
+                               aria-label="RazaoSocial" aria-describedby="inputGroup-sizing-default">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="col-form-label-sm">Tipo Pessoa:</label>
+                <select class="custom-select" asp-for="ClassificacaoDTO">
+                    <option value="@(ClassificacaoDTO.ATIVO)">Ativo</option>
+                    <option value="@(ClassificacaoDTO.INATIVO)">Inativo</option>
+                    <option value="@(ClassificacaoDTO.PREFERENCIAL)">Preferencial</option>
+                </select>
+                <span asp-validation-for="ClassificacaoDTO" class="border-danger"></span>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="btn float-md-right" role="group">
+                <button type="button" class="btn btn-primary" onclick="AdicionarContato()">
+                    <i icon="bi bi-telephone-plus"></i>
+                    Inserir Contato
+                </button>
+            </div>
+        </div>
+        <div class="table-wrapper-scroll-y">
+            <table class="table table-active table-bordered table-hover" id="tabelaContatos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Telefone</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Contatos.Count; i++)
+                    {
+                        <tr>
+                            <td hidden>
+                                <input type="hidden" asp-for="@(Model.Contatos[i].ID)" />
+                                <input type="hidden" asp-for="@(Model.Contatos[i].IDCliente)" />
+                            </td>
+                            <td asp-for="@(Model.Contatos[i].ID)">
+                                @(Model.Contatos[i].ID)
+                            </td>
+                            <td asp-for="@(Model.Contatos[i].Telefone)">
+                                <input asp-for="@(Model.Contatos[i].Telefone)" contenteditable="true" onclick="IncluirMascara('@(i)')" />
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btnDelete" type="button" onclick="RemoverContato('@(i)')">
+                                    <i icon="bi bi-trash"></i>
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="btn float-md-right" role="group">
+        <button type="submit" class="btn btn-primary ml-4">Salvar</button>
+        <button type="button" class="btn btn-secondary" onclick="location.href='@Url.Action("Index", "Cliente")'">Fechar</button>
+    </div>
+</form>
+
+
